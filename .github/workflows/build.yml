@@ -43,8 +43,11 @@ jobs:
       - name: Run unit tests (platform-agnostic Core)
         run: dotnet test src/BackDrop.Tests/BackDrop.Tests.csproj -c Release --no-restore
 
+      # No --no-restore here: self-contained publish needs the win-x64 runtime pack,
+      # which the solution-level restore (Platform=x64 only) doesn't download.
+      # Letting publish restore with -r win-x64 fetches it (NETSDK1112 fix).
       - name: Publish self-contained (win-x64)
-        run: dotnet publish src/BackDrop.App/BackDrop.App.csproj -c Release -r win-x64 --self-contained true -p:Platform=x64 --no-restore -p:PublishSingleFile=false
+        run: dotnet publish src/BackDrop.App/BackDrop.App.csproj -c Release -r win-x64 --self-contained true -p:Platform=x64 -p:PublishSingleFile=false
 
       - name: Upload build artifact
         uses: actions/upload-artifact@v4
