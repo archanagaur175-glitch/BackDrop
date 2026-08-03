@@ -1,0 +1,119 @@
+<UserControl
+    x:Class="BackDrop.App.Views.SettingsView"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:controls="using:BackDrop.App.Controls"
+    xmlns:views="using:BackDrop.App.Views">
+
+    <Grid x:Name="RootGrid" Background="{StaticResource WindowBackgroundBrush}">
+        <ScrollViewer>
+            <StackPanel Padding="32,28" Spacing="20" MaxWidth="720" HorizontalAlignment="Left">
+
+                <StackPanel Spacing="4">
+                    <TextBlock Text="BackDrop" Style="{StaticResource TitleTextStyle}" />
+                    <TextBlock Text="A cinematic lock screen and ambient backdrop for Windows."
+                               Style="{StaticResource BodyTextStyle}" />
+                </StackPanel>
+
+                <!-- Trigger -->
+                <controls:AcrylicPanel>
+                    <StackPanel Spacing="12">
+                        <TextBlock Text="Trigger" Style="{StaticResource SectionTitleStyle}" />
+                        <TextBlock Text="Global hotkey (works from any app)."
+                                   Style="{StaticResource BodyTextStyle}" />
+                        <StackPanel Orientation="Horizontal" Spacing="10">
+                            <TextBox Text="{x:Bind ViewModel.HotkeyText, Mode=TwoWay}"
+                                     Width="220"
+                                     PlaceholderText="e.g. Ctrl+Alt+L" />
+                            <Button Content="Apply" Click="ApplyHotkey_Click" />
+                        </StackPanel>
+                        <TextBlock Text="{x:Bind ViewModel.HotkeyStatus, Mode=OneWay}"
+                                   Style="{StaticResource HintTextStyle}"
+                                   Foreground="{ThemeResource SystemFillColorCautionBrush}" />
+                        <ToggleSwitch Header="Start with Windows"
+                                      IsOn="{x:Bind ViewModel.StartWithWindows, Mode=TwoWay}"
+                                      OnContent="On"
+                                      OffContent="Off" />
+                    </StackPanel>
+                </controls:AcrylicPanel>
+
+                <!-- Lock screen -->
+                <controls:AcrylicPanel>
+                    <StackPanel Spacing="12">
+                        <TextBlock Text="Lock screen" Style="{StaticResource SectionTitleStyle}" />
+
+                        <TextBlock Text="Layout" Style="{StaticResource BodyTextStyle}" />
+                        <StackPanel Orientation="Horizontal" Spacing="16">
+                            <RadioButton x:Name="LayoutMinimalistRadio"
+                                         Content="Minimalist center"
+                                         GroupName="LayoutGroup"
+                                         Tag="MinimalistCenter"
+                                         Checked="Layout_Checked" />
+                            <RadioButton x:Name="LayoutClassicRadio"
+                                         Content="Classic bottom-left"
+                                         GroupName="LayoutGroup"
+                                         Tag="ClassicBottomLeft"
+                                         Checked="Layout_Checked" />
+                            <RadioButton x:Name="LayoutCinematicRadio"
+                                         Content="Bold cinematic"
+                                         GroupName="LayoutGroup"
+                                         Tag="BoldCinematic"
+                                         Checked="Layout_Checked" />
+                        </StackPanel>
+
+                        <ToggleSwitch Header="Show seconds"
+                                      IsOn="{x:Bind ViewModel.ShowSeconds, Mode=TwoWay}"
+                                      OnContent="On"
+                                      OffContent="Off" />
+
+                        <TextBlock Text="Vignette intensity" Style="{StaticResource BodyTextStyle}" />
+                        <Slider Minimum="0"
+                                Maximum="1"
+                                StepFrequency="0.05"
+                                Width="320"
+                                HorizontalAlignment="Left"
+                                Value="{x:Bind ViewModel.VignetteIntensity, Mode=TwoWay}" />
+                    </StackPanel>
+                </controls:AcrylicPanel>
+
+                <!-- Media -->
+                <controls:AcrylicPanel>
+                    <StackPanel Spacing="12">
+                        <TextBlock Text="Media" Style="{StaticResource SectionTitleStyle}" />
+                        <TextBlock Text="Import your own ambient loops (MP4 / H.264 recommended)."
+                                   Style="{StaticResource BodyTextStyle}" />
+                        <views:MediaManagerView x:Name="MediaManager" />
+                    </StackPanel>
+                </controls:AcrylicPanel>
+
+                <!-- Security -->
+                <controls:AcrylicPanel>
+                    <StackPanel Spacing="12">
+                        <TextBlock Text="Security" Style="{StaticResource SectionTitleStyle}" />
+                        <TextBlock Text="Optional local PIN to dismiss the lock screen. Stored encrypted on this PC (DPAPI) — never sent over the network. Always recoverable from this page."
+                                   Style="{StaticResource BodyTextStyle}"
+                                   TextWrapping="Wrap" />
+                        <ToggleSwitch x:Name="PinToggle"
+                                      Header="Require PIN to dismiss"
+                                      IsOn="{x:Bind ViewModel.PinEnabled, Mode=OneWay}"
+                                      Toggled="PinToggle_Toggled"
+                                      OnContent="On"
+                                      OffContent="Off" />
+                        <StackPanel Orientation="Horizontal" Spacing="10">
+                            <PasswordBox x:Name="PinPasswordBox"
+                                         Width="180"
+                                         PlaceholderText="4–12 digits" />
+                            <Button Content="Set PIN" Click="SetPin_Click" />
+                            <Button Content="Remove PIN" Click="RemovePin_Click" />
+                        </StackPanel>
+                        <TextBlock Text="{x:Bind ViewModel.PinStatus, Mode=OneWay}"
+                                   Style="{StaticResource HintTextStyle}"
+                                   Foreground="{ThemeResource SystemFillColorCautionBrush}" />
+                    </StackPanel>
+                </controls:AcrylicPanel>
+
+            </StackPanel>
+        </ScrollViewer>
+    </Grid>
+
+</UserControl>

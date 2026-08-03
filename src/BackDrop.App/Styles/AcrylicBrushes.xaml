@@ -1,0 +1,18 @@
+<ResourceDictionary
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+
+    <SolidColorBrush x:Key="WindowBackgroundBrush" Color="#FF101218" />
+
+    <!-- Settings card surface: Mica/Acrylic on Win11, solid fallback on Win10. -->
+    <AcrylicBrush x:Key="SettingsCardBrush"
+                  BackgroundSource="HostBackdrop"
+                  TintColor="#FF1E222C"
+                  TintOpacity="0.55"
+                  FallbackColor="#FF1E222C" />
+
+    <SolidColorBrush x:Key="CardStrokeBrush" Color="#26FFFFFF" />
+
+    <SolidColorBrush x:Key="PinPanelBrush" Color="#E6101218" />
+
+</ResourceDictionary>

@@ -1,0 +1,33 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>net10.0-windows10.0.26100.0</TargetFramework>
+    <TargetPlatformMinVersion>10.0.17763.0</TargetPlatformMinVersion>
+    <RootNamespace>BackDrop.App</RootNamespace>
+    <ApplicationManifest>app.manifest</ApplicationManifest>
+    <Platforms>x64</Platforms>
+    <RuntimeIdentifier>win-x64</RuntimeIdentifier>
+    <UseWinUI>true</UseWinUI>
+    <WindowsPackageType>None</WindowsPackageType>
+    <WindowsAppSDKSelfContained>true</WindowsAppSDKSelfContained>
+    <PublishSingleFile>false</PublishSingleFile>
+    <ApplicationIcon>Assets\BackDrop.ico</ApplicationIcon>
+    <EnableMsixTooling>false</EnableMsixTooling>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.WindowsAppSDK" Version="2.1.3" />
+    <PackageReference Include="H.NotifyIcon.WinUI" Version="2.4.1" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\BackDrop.Core\BackDrop.Core.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <!-- Bundled default loop; extra user loops live under %LocalAppData%\BackDrop -->
+    <Content Include="Assets\**" CopyToOutputDirectory="PreserveNewest" />
+  </ItemGroup>
+
+</Project>
