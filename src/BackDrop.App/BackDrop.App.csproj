@@ -54,6 +54,14 @@
     <Copy SourceFiles="@(_BackDropPri)"
           DestinationFolder="$(PublishDir)"
           Condition="'@(_BackDropPri)' != ''" />
+    <!-- Belt-and-suspenders: some MRT Core versions probe for the classic resources.pri
+         name even when the module PRI is assembly-named. Emit both when available. -->
+    <Copy SourceFiles="$(OutputPath)$(AssemblyName).pri"
+          DestinationFiles="$(PublishDir)resources.pri"
+          Condition="Exists('$(OutputPath)$(AssemblyName).pri')" />
+    <Copy SourceFiles="$(IntermediateOutputPath)$(AssemblyName).pri"
+          DestinationFiles="$(PublishDir)resources.pri"
+          Condition="!Exists('$(OutputPath)$(AssemblyName).pri') And Exists('$(IntermediateOutputPath)$(AssemblyName).pri')" />
     <Warning Text="BackDrop: app PRI file not found in any expected location; unpackaged XAML load may fail with 0x802B000A."
              Condition="'@(_BackDropPri)' == ''" />
   </Target>
