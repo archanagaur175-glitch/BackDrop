@@ -1,0 +1,52 @@
+name: build
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    runs-on: windows-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup .NET SDK (pinned 10.0.302)
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '10.0.302'
+          cache: true
+
+      # Network-dependent step: retried so a transient NuGet hiccup never reds the run.
+      # Explicit success flag — the last `sleep` would otherwise mask a total failure.
+      - name: Restore (generates lock files)
+        shell: bash
+        run: |
+          ok=0
+          for i in 1 2 3; do
+            if dotnet restore BackDrop.sln -p:Platform=x64; then ok=1; break; fi
+            echo "Restore attempt $i failed; retrying in 15s..."
+            sleep 15
+          done
+          [ "$ok" = "1" ] || { echo "Restore failed after 3 attempts."; exit 1; }
+
+      - name: Build app (Release, x64)
+        run: dotnet build src/BackDrop.App/BackDrop.App.csproj -c Release -p:Platform=x64 --no-restore
+
+      - name: Run unit tests (platform-agnostic Core)
+        run: dotnet test src/BackDrop.Tests/BackDrop.Tests.csproj -c Release --no-restore
+
+      - name: Publish self-contained (win-x64)
+        run: dotnet publish src/BackDrop.App/BackDrop.App.csproj -c Release -r win-x64 --self-contained true -p:Platform=x64 --no-restore -p:PublishSingleFile=false
+
+      - name: Upload build artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: BackDrop-win-x64
+          path: src/BackDrop.App/bin/x64/Release/net10.0-windows10.0.26100.0/win-x64/publish/
+          if-no-files-found: error
