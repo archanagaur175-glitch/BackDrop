@@ -58,6 +58,22 @@ jobs:
       - name: Publish self-contained (win-x64)
         run: dotnet publish src/BackDrop.App/BackDrop.App.csproj -c Release -r win-x64 --self-contained true -p:Platform=x64 -p:PublishSingleFile=false
 
+      # WindowsAppSDK #3451: dotnet publish drops resources.pri for unpackaged apps.
+      # BackDrop.App.csproj has a CopyPriToPublish target that restores it; verify here
+      # that both MakePri produced one and the publish dir actually contains it.
+      - name: Verify resources.pri in publish output
+        shell: bash
+        run: |
+          BUILD=src/BackDrop.App/bin/x64/Release/net10.0-windows10.0.26100.0/win-x64
+          echo "=== intermediate dir pri files ==="
+          ls -la "$BUILD"/*.pri 2>/dev/null || echo "no pri in intermediate dir"
+          echo "=== publish dir pri files ==="
+          ls -la "$BUILD/publish"/*.pri 2>/dev/null || echo "no pri in publish dir"
+          if [ ! -f "$BUILD/publish/resources.pri" ]; then
+            echo "::error::resources.pri missing from publish output — XAML load will fail with 0x802B000A"
+            exit 1
+          fi
+
       - name: Upload build artifact
         uses: actions/upload-artifact@v4
         with:

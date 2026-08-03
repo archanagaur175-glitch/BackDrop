@@ -30,4 +30,25 @@
     <Content Include="Assets\**" CopyToOutputDirectory="PreserveNewest" />
   </ItemGroup>
 
+  <!-- Unpackaged apps resolve ms-appx:/// XAML through MRT Core, which reads the app's
+       resources.pri. dotnet publish for self-contained/unpackaged builds drops the PRI
+       (WindowsAppSDK #3451) — without it every Window/UserControl load fails with
+       E_XAMLPARSEFAILED (0x802B000A). MakePri emits it into the intermediate bin dir;
+       copy it into the publish dir when present. -->
+  <Target Name="CopyPriToPublish" AfterTargets="Publish">
+    <!-- MakePri may emit resources.pri into the intermediate dir, the output dir, or
+         the base output dir depending on SDK version — probe all likely locations. -->
+    <ItemGroup>
+      <_BackDropPri Include="$(IntermediateOutputPath)resources.pri"
+                    Condition="Exists('$(IntermediateOutputPath)resources.pri')" />
+      <_BackDropPri Include="$(OutputPath)resources.pri"
+                    Condition="Exists('$(OutputPath)resources.pri')" />
+      <_BackDropPri Include="$(BaseOutputPath)resources.pri"
+                    Condition="Exists('$(BaseOutputPath)resources.pri')" />
+    </ItemGroup>
+    <Copy SourceFiles="@(_BackDropPri)"
+          DestinationFolder="$(PublishDir)"
+          Condition="'@(_BackDropPri)' != ''" />
+  </Target>
+
 </Project>
