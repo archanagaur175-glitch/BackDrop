@@ -15,12 +15,17 @@ public partial class App : Application
     private TrayService? _tray;
     private LockController? _lockController;
 
+    /// <summary>Set once startup fully completes; unhandled exceptions before then must kill the process.</summary>
+    private volatile bool _startupComplete;
+
     public App()
     {
         // A tray-first app that dies silently is undiagnosable. Capture the
         // ORIGINAL exception (before the XAML runtime converts it into a
         // 0xc000027b stowed exception), log every unhandled exception, and show
         // a dialog instead of vanishing.
+        // NOTE: FirstChanceException fires for benign, handled exceptions too —
+        // keep this during bring-up, then gate it (or drop it) before release.
         AppDomain.CurrentDomain.FirstChanceException += (_, e) =>
             CrashLog.Write($"First-chance: {e.Exception.GetType().Name}: {e.Exception.Message}");
         AppDomain.CurrentDomain.UnhandledException += (_, e) =>
@@ -29,7 +34,17 @@ public partial class App : Application
         {
             CrashLog.Write($"Application unhandled: {e.Exception}");
             ShowStartupError(e.Exception);
-            e.Handled = true; // we logged + told the user; avoid a second stowed crash
+            if (!_startupComplete)
+            {
+                // A startup-phase exception must not leave a headless process
+                // holding the single-instance mutex — exit, or every later
+                // launch would silently do nothing.
+                Environment.Exit(1);
+            }
+            else
+            {
+                e.Handled = true; // post-startup: log + tell the user, keep running
+            }
         };
         TaskScheduler.UnobservedTaskException += (_, e) =>
         {
@@ -99,11 +114,14 @@ public partial class App : Application
             }
 
             CrashLog.Write("BackDrop started OK.");
+            _startupComplete = true;
         }
         catch (Exception ex)
         {
             CrashLog.Write($"FATAL startup exception: {ex}");
             ShowStartupError(ex);
+            // Never leave a headless zombie holding the mutex.
+            Environment.Exit(1);
         }
     }
 
