@@ -7,18 +7,14 @@
             CornerRadius="12"
             Padding="22,18"
             BorderThickness="1"
-            BorderBrush="{StaticResource CardStrokeBrush}">
-        <Border.Background>
-            <!-- WinUI 3 AcrylicBrush has no BackgroundSource (UWP-only); it always samples the host backdrop. -->
-            <AcrylicBrush TintColor="#FF1E222C"
-                          TintOpacity="0.55"
-                          FallbackColor="#FF1E222C" />
-        </Border.Background>
-        <!-- x:Bind to the control's own Content DP: compile-time checked (CI is the first
-             compiler), unlike classic Binding with RelativeSource AncestorType which is
-             WPF-only and would throw XamlParseException at runtime in WinUI 3. -->
-        <ContentPresenter x:Name="ContentHost"
-                          Content="{x:Bind Content, Mode=OneWay}" />
+            BorderBrush="{StaticResource CardStrokeBrush}"
+            Background="{StaticResource SettingsCardBrush}">
+        <!-- Child content is forwarded from the control's Content property in
+             code-behind (RegisterPropertyChangedCallback on the Content DP).
+             An inline AcrylicBrush created at parse time and an x:Bind to the
+             UserControl's own inherited Content property are both known-fragile
+             at parse time in WinUI 3 — see AcrylicPanel.xaml.cs. -->
+        <ContentPresenter x:Name="ContentHost" />
     </Border>
 
 </UserControl>

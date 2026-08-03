@@ -4,12 +4,11 @@
 
     <SolidColorBrush x:Key="WindowBackgroundBrush" Color="#FF101218" />
 
-    <!-- Settings card surface: Mica/Acrylic on Win11, solid fallback on Win10.
-         NB: no BackgroundSource — that property is UWP-only; WinUI 3 acrylic samples the host backdrop. -->
-    <AcrylicBrush x:Key="SettingsCardBrush"
-                  TintColor="#FF1E222C"
-                  TintOpacity="0.55"
-                  FallbackColor="#FF1E222C" />
+    <!-- Settings card surface. Solid for now: an inline AcrylicBrush created at XAML
+         parse time was implicated in the startup XamlParseException. Acrylic will be
+         re-introduced in code-behind (post-activation, safe timing) once the app
+         launches reliably. -->
+    <SolidColorBrush x:Key="SettingsCardBrush" Color="#FF1E222C" />
 
     <SolidColorBrush x:Key="CardStrokeBrush" Color="#26FFFFFF" />
 
