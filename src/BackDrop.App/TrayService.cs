@@ -50,7 +50,10 @@ public sealed class TrayService : IDisposable
                 Foreground = new SolidColorBrush(Microsoft.UI.Colors.White),
                 Background = new SolidColorBrush(Microsoft.UI.Colors.Transparent),
             },
-            ContextMenu = menu,
+            // H.NotifyIcon.WinUI 2.x: the menu is a MenuFlyout assigned to ContextFlyout
+            // (there is no "ContextMenu" property); default ContextMenuMode.PopupMenu
+            // shows it on right-click.
+            ContextFlyout = menu,
         };
 
         _tray.ForceCreate();

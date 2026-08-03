@@ -73,8 +73,8 @@ public sealed partial class LockOverlayView : UserControl
 
     private void RootGrid_KeyDown(object sender, KeyRoutedEventArgs e)
     {
-        // Let the PIN box consume its own keystrokes.
-        if (PinPanel.Visibility == Visibility.Visible && e.OriginalSource == PinBox)
+        // Let the PIN box consume its own keystrokes (reference compare, not value).
+        if (PinPanel.Visibility == Visibility.Visible && ReferenceEquals(e.OriginalSource, PinBox))
             return;
 
         TryDismiss();

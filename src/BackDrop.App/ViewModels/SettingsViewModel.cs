@@ -71,7 +71,7 @@ public sealed class SettingsViewModel : ObservableObject
     public string PinStatus
     {
         get => _pinStatus;
-        private set
+        set
         {
             _pinStatus = value;
             OnPropertyChanged();
