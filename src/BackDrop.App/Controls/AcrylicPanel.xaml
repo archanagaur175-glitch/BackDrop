@@ -1,8 +1,7 @@
 <UserControl
     x:Class="BackDrop.App.Controls.AcrylicPanel"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:local="using:BackDrop.App.Controls">
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
 
     <Border x:Name="RootBorder"
             CornerRadius="12"
@@ -15,8 +14,11 @@
                           TintOpacity="0.55"
                           FallbackColor="#FF1E222C" />
         </Border.Background>
+        <!-- x:Bind to the control's own Content DP: compile-time checked (CI is the first
+             compiler), unlike classic Binding with RelativeSource AncestorType which is
+             WPF-only and would throw XamlParseException at runtime in WinUI 3. -->
         <ContentPresenter x:Name="ContentHost"
-                          Content="{Binding Content, RelativeSource={RelativeSource AncestorType=local:AcrylicPanel}}" />
+                          Content="{x:Bind Content, Mode=OneWay}" />
     </Border>
 
 </UserControl>
