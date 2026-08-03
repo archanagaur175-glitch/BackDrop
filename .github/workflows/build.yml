@@ -69,8 +69,8 @@ jobs:
           ls -la "$BUILD"/*.pri 2>/dev/null || echo "no pri in intermediate dir"
           echo "=== publish dir pri files ==="
           ls -la "$BUILD/publish"/*.pri 2>/dev/null || echo "no pri in publish dir"
-          if [ ! -f "$BUILD/publish/resources.pri" ]; then
-            echo "::error::resources.pri missing from publish output — XAML load will fail with 0x802B000A"
+          if [ ! -f "$BUILD/publish/BackDrop.App.pri" ] && [ ! -f "$BUILD/publish/resources.pri" ]; then
+            echo "::error::app resources.pri missing from publish output — XAML load will fail with 0x802B000A"
             exit 1
           fi
 
