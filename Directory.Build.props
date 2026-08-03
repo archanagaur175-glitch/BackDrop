@@ -7,7 +7,7 @@
     <!-- Flipped to true only after the codebase is proven green (post-green hardening). -->
     <TreatWarningsAsErrors>false</TreatWarningsAsErrors>
     <!-- Generate + honor per-project lock files. First CI run generates them;
-         they are then committed and CI moves to --locked-mode. -->
+         they are then committed and CI moves to locked-mode restore. -->
     <RestorePackagesWithLockFile>true</RestorePackagesWithLockFile>
   </PropertyGroup>
 
