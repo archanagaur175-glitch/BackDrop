@@ -12,7 +12,7 @@ public class HotkeyParserTests
         var (modifiers, virtualKey) = HotkeyParser.Parse("Ctrl+Alt+L");
 
         Assert.AreEqual(HotkeyParser.MOD_CONTROL | HotkeyParser.MOD_ALT, modifiers);
-        Assert.AreEqual(0x4C, virtualKey);
+        Assert.AreEqual(0x4Cu, virtualKey);
     }
 
     [TestMethod]
@@ -21,7 +21,7 @@ public class HotkeyParserTests
         var (modifiers, virtualKey) = HotkeyParser.Parse(" ctrl + shift + f5 ");
 
         Assert.AreEqual(HotkeyParser.MOD_CONTROL | HotkeyParser.MOD_SHIFT, modifiers);
-        Assert.AreEqual(0x74, virtualKey); // F5 = VK_F5
+        Assert.AreEqual(0x74u, virtualKey); // F5 = VK_F5
     }
 
     [TestMethod]
@@ -32,7 +32,7 @@ public class HotkeyParserTests
         Assert.AreEqual(
             HotkeyParser.MOD_CONTROL | HotkeyParser.MOD_ALT | HotkeyParser.MOD_SHIFT | HotkeyParser.MOD_WIN,
             modifiers);
-        Assert.AreEqual(0x20, virtualKey);
+        Assert.AreEqual(0x20u, virtualKey);
     }
 
     [TestMethod]
