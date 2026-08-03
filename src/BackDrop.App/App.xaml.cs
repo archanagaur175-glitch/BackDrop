@@ -52,6 +52,14 @@ public partial class App : Application
             e.SetObserved();
         };
 
+        // XAML parse failures print only "XAML parsing failed" with no element.
+        // These two DebugSettings events name the EXACT resource/binding that failed,
+        // turning a mystery crash into a one-line diagnosis.
+        DebugSettings.BindingFailed += (_, e) =>
+            CrashLog.Write($"XAML Binding failed: {e.Message}");
+        DebugSettings.XamlResourceReferenceFailed += (_, e) =>
+            CrashLog.Write($"XAML resource reference failed: {e.Message}");
+
         try
         {
             InitializeComponent();
@@ -118,7 +126,7 @@ public partial class App : Application
         }
         catch (Exception ex)
         {
-            CrashLog.Write($"FATAL startup exception: {ex}");
+            CrashLog.Write($"FATAL startup exception (HRESULT 0x{ex.HResult:X8}): {ex}");
             ShowStartupError(ex);
             // Never leave a headless zombie holding the mutex.
             Environment.Exit(1);
