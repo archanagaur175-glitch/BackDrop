@@ -6,6 +6,14 @@ namespace BackDrop.Tests;
 [TestClass]
 public class MediaImportServiceTests
 {
+    /// <summary>Writable temp file path; the BackDrop.Tests dir may not exist on a fresh runner.</summary>
+    private static string TempFilePath()
+    {
+        var dir = Path.Combine(Path.GetTempPath(), "BackDrop.Tests");
+        Directory.CreateDirectory(dir);
+        return Path.Combine(dir, Guid.NewGuid().ToString("N") + ".mp4");
+    }
+
     [TestMethod]
     [DataRow(@"C:\videos\loop.mp4", true)]
     [DataRow(@"C:\videos\loop.MP4", true)]
@@ -28,7 +36,7 @@ public class MediaImportServiceTests
     [TestMethod]
     public void IsValidFile_EmptyFile_ReturnsFalse()
     {
-        var temp = Path.Combine(Path.GetTempPath(), "BackDrop.Tests", Guid.NewGuid().ToString("N") + ".mp4");
+        var temp = TempFilePath();
         File.WriteAllBytes(temp, Array.Empty<byte>());
         try
         {
@@ -43,7 +51,7 @@ public class MediaImportServiceTests
     [TestMethod]
     public void IsValidFile_RealFile_ReturnsTrue()
     {
-        var temp = Path.Combine(Path.GetTempPath(), "BackDrop.Tests", Guid.NewGuid().ToString("N") + ".mp4");
+        var temp = TempFilePath();
         File.WriteAllBytes(temp, new byte[1024]);
         try
         {
@@ -65,7 +73,7 @@ public class MediaImportServiceTests
     [TestMethod]
     public void Import_ValidFile_CreatesItem()
     {
-        var temp = Path.Combine(Path.GetTempPath(), "BackDrop.Tests", Guid.NewGuid().ToString("N") + ".mp4");
+        var temp = TempFilePath();
         File.WriteAllBytes(temp, new byte[2048]);
         try
         {

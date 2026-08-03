@@ -39,7 +39,7 @@ public class SettingsServiceTests
         {
             Name = "loop.mp4",
             FilePath = @"C:\videos\loop.mp4",
-            SizeBytes = 1024 * 1024 * 5,
+            SizeBytes = 5_000_000, // 5.0 MB (DisplaySize divides by 1,000,000)
         });
         service.Save();
 
