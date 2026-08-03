@@ -9,8 +9,8 @@
             BorderThickness="1"
             BorderBrush="{StaticResource CardStrokeBrush}">
         <Border.Background>
-            <AcrylicBrush BackgroundSource="HostBackdrop"
-                          TintColor="#FF1E222C"
+            <!-- WinUI 3 AcrylicBrush has no BackgroundSource (UWP-only); it always samples the host backdrop. -->
+            <AcrylicBrush TintColor="#FF1E222C"
                           TintOpacity="0.55"
                           FallbackColor="#FF1E222C" />
         </Border.Background>
