@@ -1,20 +1,21 @@
-<UserControl
+<ContentControl
     x:Class="BackDrop.App.Controls.AcrylicPanel"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
 
-    <Border x:Name="RootBorder"
-            CornerRadius="12"
-            Padding="22,18"
-            BorderThickness="1"
-            BorderBrush="{StaticResource CardStrokeBrush}"
-            Background="{StaticResource SettingsCardBrush}">
-        <!-- Child content is forwarded from the control's Content property in
-             code-behind (RegisterPropertyChangedCallback on the Content DP).
-             An inline AcrylicBrush created at parse time and an x:Bind to the
-             UserControl's own inherited Content property are both known-fragile
-             at parse time in WinUI 3 — see AcrylicPanel.xaml.cs. -->
-        <ContentPresenter x:Name="ContentHost" />
-    </Border>
+    <ContentControl.Template>
+        <ControlTemplate TargetType="ContentControl">
+            <Border CornerRadius="12"
+                    Padding="22,18"
+                    BorderThickness="1"
+                    BorderBrush="{StaticResource CardStrokeBrush}"
+                    Background="{StaticResource SettingsCardBrush}">
+                <!-- The ContentPresenter auto-binds to the templated parent's Content
+                     (same mechanism as Button) — no manual content forwarding, which
+                     previously double-assigned the child and threw E_INVALIDARG. -->
+                <ContentPresenter />
+            </Border>
+        </ControlTemplate>
+    </ContentControl.Template>
 
-</UserControl>
+</ContentControl>
